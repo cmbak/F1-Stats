@@ -1,10 +1,12 @@
 import React from 'react'
+import LineGraph from './LineGraph'
 
 function DriverStandings() {
     return (
-    <h1>
-        Hi
-    </h1>
+    <>
+        <h1>hi </h1>
+        <LineGraph />
+    </>
     )
 }
 
