@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import './App.css'
+import DriverStandings from './components/DriverStandings'
 
 function App() {
   return (
     <>
-
+      <DriverStandings />
     </>
   )
 }
