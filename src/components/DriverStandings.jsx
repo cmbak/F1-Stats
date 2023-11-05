@@ -1,5 +1,4 @@
 import React from 'react'
-import LineGraph from './LineGraph'
 
 function DriverStandings() {
 
@@ -19,10 +18,7 @@ function DriverStandings() {
 
 
     return (
-    <>
-        <h1>hi</h1>
-        {/* <LineGraph /> */}
-    </>
+        <h1>Hi</h1>
     )
 }
 
