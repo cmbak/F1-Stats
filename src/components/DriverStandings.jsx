@@ -9,6 +9,7 @@ function DriverStandings() {
     const [currentData, setCurrentData] = React.useState([]);
     let numCompletedRounds;
     let numDrivers;
+    let raceNames;
 
     // For each driver we want to create an object which looks like this: 
     // {
@@ -18,7 +19,7 @@ function DriverStandings() {
 
     // Chart data 
     let data ={
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: [raceNames],
         datasets: [{
             label: '# of Votes',
             data: [12, 19, 3, 5, 2, 3],
@@ -30,7 +31,7 @@ function DriverStandings() {
     }
     
     // Can we make the followng local vars?
-    // xLabels (array str), driverID? (array str), completed rounds (int)
+    // xLabels (array str), driverID? (array str)
     // And then points for each driver - some function gets driver id passed into it
     // and gets the results from each round
 
@@ -46,11 +47,19 @@ function DriverStandings() {
             }).catch(error => console.log(error));
             //console.log(currentData);
         }
+
+        async function getRaceNames() {
+            const url = 'https://ergast.com/api/f1/current.json';
+            await axios.get(url).then(response => {
+                raceNames = response.data.MRData.RaceTable.Races.map(race => race.raceName);
+            })
+        }
         
         getCurrentData();
+        getRaceNames();
+
     }, []);
 
-    // TODO Get labels for x Axis
     // TODO Get a list of all the drivers
 
     // TODO Get data (points in each round in an array) for each driver:
