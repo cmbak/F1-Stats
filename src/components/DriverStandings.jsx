@@ -9,6 +9,7 @@ function DriverStandings() {
     const [currentData, setCurrentData] = React.useState([]);
     let numCompletedRounds;
     let numDrivers;
+    let driverIDs;
     let raceNames;
 
     // For each driver we want to create an object which looks like this: 
@@ -41,11 +42,11 @@ function DriverStandings() {
             const url = 'https://ergast.com/api/f1/2023/driverStandings.json';
             const response = await axios.get(url).then(response => {
                 setCurrentData(response.data.MRData);
-                numCompletedRounds = response.data.MRData.StandingsTable.StandingsLists[0].round;
-                numDrivers = response.data.MRData.StandingsTable.StandingsLists[0].DriverStandings.length;
+                const {StandingsLists} = response.data.MRData.StandingsTable;
+                numCompletedRounds = StandingsLists[0].round;
+                numDrivers = StandingsLists[0].DriverStandings.length;
                 //console.log(numCompletedRounds);
             }).catch(error => console.log(error));
-            //console.log(currentData);
         }
 
         async function getRaceNames() {
@@ -54,13 +55,20 @@ function DriverStandings() {
                 raceNames = response.data.MRData.RaceTable.Races.map(race => race.raceName);
             })
         }
+
+        async function getDriverIds() {
+            const url = 'https://ergast.com/api/f1/2023/driverStandings.json';
+            await axios.get(url).then(response => {
+                const {DriverStandings} = response.data.MRData.StandingsTable.StandingsLists[0];
+                driverIDs = DriverStandings.map(driver => driver.Driver.driverId); // In championship standing order
+            })
+        }
         
         getCurrentData();
         getRaceNames();
+        getDriverIds();
 
     }, []);
-
-    // TODO Get a list of all the drivers
 
     // TODO Get data (points in each round in an array) for each driver:
         //TODO Need to get the number of rounds which have been completed
