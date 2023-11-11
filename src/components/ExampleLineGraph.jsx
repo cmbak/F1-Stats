@@ -6,7 +6,7 @@ ChartJS.register(LineElement, PointElement, LinearScale, Title);
 
 function ExampleLineGraph() {
     return <div>
-        <Line 
+        {/* <Line 
             data={{
                 labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
                 datasets: [{
@@ -19,7 +19,7 @@ function ExampleLineGraph() {
             options={{
                 maintainAspectRatio: false
             }}
-        />
+        /> */}
     </div>
 }
 
