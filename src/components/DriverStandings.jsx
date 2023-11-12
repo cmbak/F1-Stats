@@ -20,11 +20,11 @@ function DriverStandings() {
     // }
 
     // Chart data 
-    let data ={
-        labels: [raceNames],
+    let data = {
+        labels: raceNames,
         datasets: [{
             label : 'just to display',
-            data : [1,2,3,4,5,7,23,-12,2]
+            data : [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         }]
     }
     
@@ -37,7 +37,7 @@ function DriverStandings() {
     useEffect(() => {
         async function getCurrentData() {
             const url = 'https://ergast.com/api/f1/2023/driverStandings.json';
-            const response = await axios.get(url).then(response => {
+            await axios.get(url).then(response => {
                 setCurrentData(response.data.MRData);
                 const {StandingsLists} = response.data.MRData.StandingsTable;
                 const {DriverStandings} = StandingsLists[0];
@@ -48,7 +48,7 @@ function DriverStandings() {
                     data.datasets.push({
                         label : driver.Driver.driverId,
                         data : []
-                    })
+                    }) // is a comma needed?
                 })
             }).catch(error => console.log(error));
         }
@@ -56,7 +56,7 @@ function DriverStandings() {
         async function getRaceNames() {
             const url = 'https://ergast.com/api/f1/current.json';
             await axios.get(url).then(response => {
-                raceNames = response.data.MRData.RaceTable.Races.map(race => race.raceName);
+                data.labels = response.data.MRData.RaceTable.Races.map(race => race.raceName);
             }).catch(error => console.log(error));
         }
 
@@ -66,9 +66,6 @@ function DriverStandings() {
             await axios.get(url).then(response => {
                 const {DriverStandings} = response.data.MRData.StandingsTable.StandingsLists[0];
                 driverIDs = DriverStandings.map(driver => driver.Driver.driverId); // In championship standing order
-                
-
-
             }).catch(error => console.log(error));
         }
         
@@ -77,22 +74,39 @@ function DriverStandings() {
             for (let i = 1; i <= numCompletedRounds; i++) {
                 const url = `https://ergast.com/api/f1/2023/${i}/driverStandings.json`;
                 await axios.get(url).then(response => {
-                    // TODO Loop over all the drivers, 
-                        // TODO append each drivers points @ end of current round to driverDatasets.data
+                    const {DriverStandings} = response.data.MRData.StandingsTable.StandingsLists[0];
+                    // data.datasets.forEach(dataset => {
+                    //     DriverStandings.forEach(driver => {
+                    //         if (driver.Driver.driverId == dataset.label) {
+                    //             dataset.data.push(driver.points);
+                    //         }
+                    //     })
+                    // })
 
-                    //console.log(response.data)
+                    DriverStandings.forEach(driver => {
+                        data.datasets.forEach(dataset => {
+                            if (dataset.label == driver.Driver.driverId) {
+                                dataset.data.push(driver.points);
+                            }
+                        })
+                    })
+
+                    console.log(data)
                 }).catch(error => console.log(error));
             }
         }
         
         async function getData() {
-            await getCurrentData();
             await getRaceNames();
             await getDriverIds();
+            await getCurrentData();
             await getDriverData(); 
+            console.log(data)
         }
         
         getData();
+
+        
 
     }, []);
 
