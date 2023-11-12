@@ -19,9 +19,23 @@ function DriverStandings() {
     //        data: array of points
     // }
 
+    // let data = {
+    //     labels : ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL'],
+    //     datasets: [
+    //         {
+    //             data: [65, 59, 80, 81, 56, 55, 40]
+    //         },
+    //         {
+    //             data: [65, 59, 80, 81, 56, 55, 40],
+    //         }
+    //     ]
+    // }
+
+    // console.log(data);
+
     // Chart data 
     let data = {
-        labels: raceNames,
+        labels: [],
         datasets: [{
             label : 'just to display',
             data : [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
@@ -56,18 +70,25 @@ function DriverStandings() {
         async function getRaceNames() {
             const url = 'https://ergast.com/api/f1/current.json';
             await axios.get(url).then(response => {
-                data.labels = response.data.MRData.RaceTable.Races.map(race => race.raceName);
+                // Only want to get the names of the COMPLETED rounds (not necessarily all)
+                const { Races } = response.data.MRData.RaceTable;
+                console.log(Races);
+                for (let i = 0; i < numCompletedRounds; i++) {
+                    data.labels.push(Races[i].raceName)
+                }
+
+                //data.labels = response.data.MRData.RaceTable.Races.map(race => race.raceName);
             }).catch(error => console.log(error));
         }
 
         // TODO This could be merged w/ getCurrentData (same url)
-        async function getDriverIds() {
-            const url = 'https://ergast.com/api/f1/2023/driverStandings.json'; // TODO - try and find a way to make this applicable for any year (current vs explicit year)
-            await axios.get(url).then(response => {
-                const {DriverStandings} = response.data.MRData.StandingsTable.StandingsLists[0];
-                driverIDs = DriverStandings.map(driver => driver.Driver.driverId); // In championship standing order
-            }).catch(error => console.log(error));
-        }
+        // async function getDriverIds() {
+        //     const url = 'https://ergast.com/api/f1/2023/driverStandings.json'; // TODO - try and find a way to make this applicable for any year (current vs explicit year)
+        //     await axios.get(url).then(response => {
+        //         const {DriverStandings} = response.data.MRData.StandingsTable.StandingsLists[0];
+        //         driverIDs = DriverStandings.map(driver => driver.Driver.driverId); // In championship standing order
+        //     }).catch(error => console.log(error));
+        // }
         
         async function getDriverData() {
             console.log(numCompletedRounds);
@@ -91,17 +112,20 @@ function DriverStandings() {
                         })
                     })
 
-                    console.log(data)
+
                 }).catch(error => console.log(error));
             }
         }
         
         async function getData() {
-            await getRaceNames();
-            await getDriverIds();
+            
+            //await getDriverIds();
             await getCurrentData();
-            await getDriverData(); 
+            await getRaceNames();
+            console.log(numCompletedRounds)
             console.log(data)
+            // await getDriverData(); 
+            // console.log(data)
         }
         
         getData();
