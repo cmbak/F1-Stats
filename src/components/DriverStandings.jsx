@@ -6,12 +6,15 @@ import { Chart as ChartJS, LineElement, PointElement, LinearScale, Title} from '
 ChartJS.register(LineElement, PointElement, LinearScale, Title);
 
 function DriverStandings() {
-    const [currentData, setCurrentData] = React.useState([]);
+    const [chartData, setChartData] = React.useState({
+        labels: [],
+        datasets : []
+    });
     let driverDatasets = []
     let numCompletedRounds;
     let numDrivers;
     let driverIDs;
-    let raceNames;
+    let raceNames = [];
 
     // For each driver we want to create an object which looks like this: 
     // {
@@ -32,15 +35,6 @@ function DriverStandings() {
     // }
 
     // console.log(data);
-
-    // Chart data 
-    let data = {
-        labels: [],
-        datasets: [{
-            label : 'just to display',
-            data : [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-        }]
-    }
     
     // Can we make the followng local vars?
     // xLabels (array str), driverID? (array str)
@@ -52,19 +46,22 @@ function DriverStandings() {
         async function getCurrentData() {
             const url = 'https://ergast.com/api/f1/2023/driverStandings.json';
             await axios.get(url).then(response => {
-                setCurrentData(response.data.MRData);
+                //setCurrentData(response.data.MRData);
                 const {StandingsLists} = response.data.MRData.StandingsTable;
                 const {DriverStandings} = StandingsLists[0];
                 numCompletedRounds = StandingsLists[0].round;
                 numDrivers = StandingsLists[0].DriverStandings.length;
 
                 DriverStandings.forEach(driver => {
-                    data.datasets.push({
+                    driverDatasets.push({
+                    //data.datasets.push({
                         label : driver.Driver.driverId,
                         data : []
                     }) // is a comma needed?
                 })
             }).catch(error => console.log(error));
+
+            //console.log(driverDatasets);
         }
 
         async function getRaceNames() {
@@ -72,9 +69,9 @@ function DriverStandings() {
             await axios.get(url).then(response => {
                 // Only want to get the names of the COMPLETED rounds (not necessarily all)
                 const { Races } = response.data.MRData.RaceTable;
-                console.log(Races);
                 for (let i = 0; i < numCompletedRounds; i++) {
-                    data.labels.push(Races[i].raceName)
+                    //data.labels.push(Races[i].raceName)
+                    raceNames.push(Races[i].raceName);
                 }
 
                 //data.labels = response.data.MRData.RaceTable.Races.map(race => race.raceName);
@@ -91,7 +88,7 @@ function DriverStandings() {
         // }
         
         async function getDriverData() {
-            console.log(numCompletedRounds);
+            //console.log(numCompletedRounds);
             for (let i = 1; i <= numCompletedRounds; i++) {
                 const url = `https://ergast.com/api/f1/2023/${i}/driverStandings.json`;
                 await axios.get(url).then(response => {
@@ -105,7 +102,8 @@ function DriverStandings() {
                     // })
 
                     DriverStandings.forEach(driver => {
-                        data.datasets.forEach(dataset => {
+                        driverDatasets.forEach(dataset => {
+                        //data.datasets.forEach(dataset => {
                             if (dataset.label == driver.Driver.driverId) {
                                 dataset.data.push(driver.points);
                             }
@@ -122,10 +120,15 @@ function DriverStandings() {
             //await getDriverIds();
             await getCurrentData();
             await getRaceNames();
-            console.log(numCompletedRounds)
-            console.log(data)
-            // await getDriverData(); 
-            // console.log(data)
+            await getDriverData(); 
+            //data.datasets = driverDatasets;
+            //console.log(raceNames)
+            //console.log(driverDatasets)
+            setChartData({
+                labels: raceNames,
+                datasets: driverDatasets
+            })
+            //console.log(chartData)
         }
         
         getData();
@@ -144,13 +147,10 @@ function DriverStandings() {
         // TODO Convert strings returned from ^ to Integers
 
         // TODO Find a way of being able to do this for each driver
-
-    
-
     return (
         <div>
             <Line 
-                data={data}
+                data={chartData}
                 height={400}
                 width={100}
                 options={{
