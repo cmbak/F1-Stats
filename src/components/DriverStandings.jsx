@@ -7,6 +7,7 @@ ChartJS.register(LineElement, PointElement, LinearScale, Title);
 
 function DriverStandings() {
     const [currentData, setCurrentData] = React.useState([]);
+    let driverDatasets = []
     let numCompletedRounds;
     let numDrivers;
     let driverIDs;
@@ -22,12 +23,8 @@ function DriverStandings() {
     let data ={
         labels: [raceNames],
         datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-        },
-        {
-            label: '#dsfds of Votes',
-            data: [12, 24, 3, 5, 2, 30],
+            label : 'just to display',
+            data : [1,2,3,4,5,7,23,-12,2]
         }]
     }
     
@@ -43,9 +40,16 @@ function DriverStandings() {
             const response = await axios.get(url).then(response => {
                 setCurrentData(response.data.MRData);
                 const {StandingsLists} = response.data.MRData.StandingsTable;
+                const {DriverStandings} = StandingsLists[0];
                 numCompletedRounds = StandingsLists[0].round;
                 numDrivers = StandingsLists[0].DriverStandings.length;
-                //console.log(numCompletedRounds);
+
+                DriverStandings.forEach(driver => {
+                    data.datasets.push({
+                        label : driver.Driver.driverId,
+                        data : []
+                    })
+                })
             }).catch(error => console.log(error));
         }
 
@@ -53,20 +57,42 @@ function DriverStandings() {
             const url = 'https://ergast.com/api/f1/current.json';
             await axios.get(url).then(response => {
                 raceNames = response.data.MRData.RaceTable.Races.map(race => race.raceName);
-            })
+            }).catch(error => console.log(error));
         }
 
+        // TODO This could be merged w/ getCurrentData (same url)
         async function getDriverIds() {
-            const url = 'https://ergast.com/api/f1/2023/driverStandings.json';
+            const url = 'https://ergast.com/api/f1/2023/driverStandings.json'; // TODO - try and find a way to make this applicable for any year (current vs explicit year)
             await axios.get(url).then(response => {
                 const {DriverStandings} = response.data.MRData.StandingsTable.StandingsLists[0];
                 driverIDs = DriverStandings.map(driver => driver.Driver.driverId); // In championship standing order
-            })
+                
+
+
+            }).catch(error => console.log(error));
         }
         
-        getCurrentData();
-        getRaceNames();
-        getDriverIds();
+        async function getDriverData() {
+            console.log(numCompletedRounds);
+            for (let i = 1; i <= numCompletedRounds; i++) {
+                const url = `https://ergast.com/api/f1/2023/${i}/driverStandings.json`;
+                await axios.get(url).then(response => {
+                    // TODO Loop over all the drivers, 
+                        // TODO append each drivers points @ end of current round to driverDatasets.data
+
+                    //console.log(response.data)
+                }).catch(error => console.log(error));
+            }
+        }
+        
+        async function getData() {
+            await getCurrentData();
+            await getRaceNames();
+            await getDriverIds();
+            await getDriverData(); 
+        }
+        
+        getData();
 
     }, []);
 
