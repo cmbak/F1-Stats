@@ -106,6 +106,14 @@ function DriverStandings() {
                 height={800}
                 width={200}
                 options={{
+                    scales: {
+                        x: {
+                            ticks: {
+                                maxRotation: 90,
+                                minRotation: 90
+                            }
+                        },
+                    },
                     maintainAspectRatio: false
                 }}
             />
