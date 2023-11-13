@@ -28,7 +28,7 @@ function DriverStandings() {
     let driverDatasets = []
     let numCompletedRounds;
     let numDrivers;
-    let driverIDs;
+    let driverIDs = [];
     let raceNames = [];
 
     // For each driver we want to create an object which looks like this: 
@@ -47,22 +47,23 @@ function DriverStandings() {
                 numCompletedRounds = StandingsLists[0].round;
                 numDrivers = StandingsLists[0].DriverStandings.length;
                 DriverStandings.forEach(driver => {
-                    // console.log(driver.Driver.driverId)
-                    // console.log(CONSTRUCTOR_COLOURS_BY_ID[driver.Constructors[0].constructorId])
+                    driverIDs.push(driver.Driver.driverId)
+                    //label : `${driver.Driver.givenName} ${driver.Driver.familyName}`,
                     driverDatasets.push({
                         label : driver.Driver.driverId, // TODO - Capitalise first letter and for drivers with underscores, replace with spaces
                         data : [],
-                        borderColor : CONSTRUCTOR_COLOURS_BY_ID[driver.Constructors[0].constructorId]
+                        borderColor : CONSTRUCTOR_COLOURS_BY_ID[driver.Constructors[0].constructorId],
+                        backgroundColor: CONSTRUCTOR_COLOURS_BY_ID[driver.Constructors[0].constructorId]
                     })
                 })
             }).catch(error => console.log(error));
 
         }
 
+        // Gets names of completed rounds and adds them to raceNames array
         async function getRaceNames() {
             const url = 'https://ergast.com/api/f1/current.json';
             await axios.get(url).then(response => {
-                // Only want to get the names of the COMPLETED rounds (not necessarily all)
                 const { Races } = response.data.MRData.RaceTable;
                 for (let i = 0; i < numCompletedRounds; i++) {
                     raceNames.push(Races[i].raceName);
@@ -79,8 +80,8 @@ function DriverStandings() {
         //     }).catch(error => console.log(error));
         // }
         
+        // Gets the points each driver had after each round and adds them to the driver's data array
         async function getDriverData() {
-            //console.log(numCompletedRounds);
             for (let i = 1; i <= numCompletedRounds; i++) {
                 const url = `https://ergast.com/api/f1/2023/${i}/driverStandings.json`;
                 await axios.get(url).then(response => {
@@ -122,13 +123,33 @@ function DriverStandings() {
                 height={800}
                 width={200}
                 options={{
+                    responsive: true,
                     scales: {
                         x: {
+                            title: {
+                                display: true,
+                                text: 'Grand Prix',
+                                font: {
+                                    size: 25,
+                                    weight: 'bold'
+                                }
+                            },
                             ticks: {
                                 maxRotation: 90,
                                 minRotation: 90
                             }
                         },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Points',
+                                font: {
+                                    size: 25,
+                                    weight: 'bold'
+                                }
+                            }
+                        }
                     },
                     maintainAspectRatio: false
                 }}
