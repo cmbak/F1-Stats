@@ -10,7 +10,7 @@ function DriverStandings() {
         labels: [],
         datasets : []
     });
-    
+
     let driverDatasets = []
     let numCompletedRounds;
     let numDrivers;
@@ -35,8 +35,7 @@ function DriverStandings() {
 
                 DriverStandings.forEach(driver => {
                     driverDatasets.push({
-                    //data.datasets.push({
-                        label : driver.Driver.driverId,
+                        label : driver.Driver.driverId, // TODO - Capitalise first letter and for drivers with underscores, replace with spaces
                         data : []
                     })
                 })
@@ -72,7 +71,7 @@ function DriverStandings() {
                     const {DriverStandings} = response.data.MRData.StandingsTable.StandingsLists[0];
                     DriverStandings.forEach(driver => {
                         driverDatasets.forEach(dataset => {
-                            if (dataset.label == driver.Driver.driverId) {
+                            if (dataset.label.toLowerCase() == driver.Driver.driverId) {
                                 dataset.data.push(driver.points);
                             }
                         })
@@ -84,11 +83,11 @@ function DriverStandings() {
         }
         
         async function getData() {
-            
+            console.log("getData call beginning")
             //await getDriverIds();
             await getCurrentData();
             await getRaceNames();
-            await getDriverData(); 
+            await getDriverData();
             setChartData({
                 labels: raceNames,
                 datasets: driverDatasets
@@ -104,8 +103,8 @@ function DriverStandings() {
         <div>
             <Line 
                 data={chartData}
-                height={400}
-                width={100}
+                height={800}
+                width={200}
                 options={{
                     maintainAspectRatio: false
                 }}
