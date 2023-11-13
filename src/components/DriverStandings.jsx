@@ -11,6 +11,20 @@ function DriverStandings() {
         datasets : []
     });
 
+    // https://www.reddit.com/r/formula1/comments/11a3wnj/f1_2023_hex_codes/
+    const CONSTRUCTOR_COLOURS_BY_ID = {
+        "mercedes": "#6CD3BF",
+        "red_bull": "#3671C6",
+        "ferrari": "#F91536",
+        "mclaren": "#F58020",
+        "alpine": "#2293D1",
+        "alphatauri": "#5E8FAA",
+        "aston_martin": "#358C75",
+        "williams": "#37BEDD",
+        "alfa": "#C92D4B",
+        "haas": "#B6BABD"
+    }
+
     let driverDatasets = []
     let numCompletedRounds;
     let numDrivers;
@@ -32,11 +46,13 @@ function DriverStandings() {
                 const {DriverStandings} = StandingsLists[0];
                 numCompletedRounds = StandingsLists[0].round;
                 numDrivers = StandingsLists[0].DriverStandings.length;
-
                 DriverStandings.forEach(driver => {
+                    // console.log(driver.Driver.driverId)
+                    // console.log(CONSTRUCTOR_COLOURS_BY_ID[driver.Constructors[0].constructorId])
                     driverDatasets.push({
                         label : driver.Driver.driverId, // TODO - Capitalise first letter and for drivers with underscores, replace with spaces
-                        data : []
+                        data : [],
+                        borderColor : CONSTRUCTOR_COLOURS_BY_ID[driver.Constructors[0].constructorId]
                     })
                 })
             }).catch(error => console.log(error));
