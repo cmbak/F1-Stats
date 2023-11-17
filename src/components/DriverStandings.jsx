@@ -29,6 +29,7 @@ function DriverStandings() {
     let numCompletedRounds;
     let numDrivers;
     let driverIDs = [];
+    let driversByID = {};
     let raceNames = [];
 
     // For each driver we want to create an object which looks like this: 
@@ -48,9 +49,11 @@ function DriverStandings() {
                 numDrivers = StandingsLists[0].DriverStandings.length;
                 DriverStandings.forEach(driver => {
                     driverIDs.push(driver.Driver.driverId)
+                    driversByID[driver.Driver.driverId] = `${driver.Driver.givenName} ${driver.Driver.familyName}`
                     //label : `${driver.Driver.givenName} ${driver.Driver.familyName}`,
                     driverDatasets.push({
-                        label : driver.Driver.driverId, // TODO - Capitalise first letter and for drivers with underscores, replace with spaces
+                        //label : driver.Driver.driverId, // TODO - Capitalise first letter and for drivers with underscores, replace with spaces
+                        label : driversByID[driver.Driver.driverId],
                         data : [],
                         borderColor : CONSTRUCTOR_COLOURS_BY_ID[driver.Constructors[0].constructorId],
                         backgroundColor: CONSTRUCTOR_COLOURS_BY_ID[driver.Constructors[0].constructorId]
@@ -70,15 +73,6 @@ function DriverStandings() {
                 }
             }).catch(error => console.log(error));
         }
-
-        // TODO This could be merged w/ getCurrentData (same url)
-        // async function getDriverIds() {
-        //     const url = 'https://ergast.com/api/f1/2023/driverStandings.json'; // TODO - try and find a way to make this applicable for any year (current vs explicit year)
-        //     await axios.get(url).then(response => {
-        //         const {DriverStandings} = response.data.MRData.StandingsTable.StandingsLists[0];
-        //         driverIDs = DriverStandings.map(driver => driver.Driver.driverId); // In championship standing order
-        //     }).catch(error => console.log(error));
-        // }
         
         // Gets the points each driver had after each round and adds them to the driver's data array
         async function getDriverData() {
@@ -88,15 +82,18 @@ function DriverStandings() {
                     const {DriverStandings} = response.data.MRData.StandingsTable.StandingsLists[0];
                     DriverStandings.forEach(driver => {
                         driverDatasets.forEach(dataset => {
-                            if (dataset.label.toLowerCase() == driver.Driver.driverId) {
+                            if (getKeyByValue(driversByID, dataset.label) == driver.Driver.driverId) {
                                 dataset.data.push(driver.points);
                             }
                         })
                     })
-
-
                 }).catch(error => console.log(error));
             }
+        }
+
+        // Returns the key of an object given its value
+        function getKeyByValue(object, value) {
+            return Object.keys(object).find(key => object[key] === value);
         }
         
         async function getData() {
@@ -123,6 +120,11 @@ function DriverStandings() {
                 height={800}
                 width={200}
                 options={{
+                    // plugins: {
+                    //     legend: {
+                    //         position: 'right'
+                    //     }
+                    // },
                     responsive: true,
                     scales: {
                         x: {
