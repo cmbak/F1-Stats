@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import DriverStandings from './components/DriverStandings'
-import ExampleLineGraph from './components/ExampleLineGraph'
+import DriverComparisonCard from './components/DriverComparisonCard'
 
 function App() {
   return (
     <>
       <DriverStandings />
-      <ExampleLineGraph />
+      <div className='comparison-container'>
+        <DriverComparisonCard/>
+      </div>
     </>
   )
 }

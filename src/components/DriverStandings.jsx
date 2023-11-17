@@ -50,9 +50,7 @@ function DriverStandings() {
                 DriverStandings.forEach(driver => {
                     driverIDs.push(driver.Driver.driverId)
                     driversByID[driver.Driver.driverId] = `${driver.Driver.givenName} ${driver.Driver.familyName}`
-                    //label : `${driver.Driver.givenName} ${driver.Driver.familyName}`,
                     driverDatasets.push({
-                        //label : driver.Driver.driverId, // TODO - Capitalise first letter and for drivers with underscores, replace with spaces
                         label : driversByID[driver.Driver.driverId],
                         data : [],
                         borderColor : CONSTRUCTOR_COLOURS_BY_ID[driver.Constructors[0].constructorId],
@@ -60,7 +58,6 @@ function DriverStandings() {
                     })
                 })
             }).catch(error => console.log(error));
-
         }
 
         // Gets names of completed rounds and adds them to raceNames array
@@ -98,7 +95,6 @@ function DriverStandings() {
         
         async function getData() {
             console.log("getData call beginning")
-            //await getDriverIds();
             await getCurrentData();
             await getRaceNames();
             await getDriverData();
@@ -107,7 +103,6 @@ function DriverStandings() {
                 datasets: driverDatasets
             })
         }
-        
         getData();
     }, []);
 
