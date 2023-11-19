@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import DriverStandings from './components/DriverStandings'
-import DriverComparisonCard from './components/DriverComparisonCard'
+import PodiumDriverCard from './components/PodiumDriverCard'
+import PodiumCards from './components/PodiumCards'
 
 function App() {
   return (
     <>
       <DriverStandings />
-      <div className='comparison-container'>
-        <DriverComparisonCard/>
-      </div>
+      <PodiumCards />
     </>
   )
 }

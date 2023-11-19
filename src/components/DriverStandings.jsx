@@ -6,7 +6,7 @@ import { Chart as ChartJS, LineElement, PointElement, LinearScale, Title} from '
 ChartJS.register(LineElement, PointElement, LinearScale, Title);
 
 function DriverStandings() {
-    const [chartData, setChartData] = React.useState({
+    const [chartData, setChartData] = useState({
         labels: [],
         datasets : []
     });
