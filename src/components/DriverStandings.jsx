@@ -109,7 +109,7 @@ function DriverStandings() {
     // TODO ADD LOADING PAGE!
 
     return (
-        <div>
+        <div className='driver-standings-container'>
             <Line 
                 data={chartData}
                 height={800}

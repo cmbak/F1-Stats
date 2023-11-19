@@ -21,6 +21,11 @@
   }
 } */
 
+/* Driver Standings Styling */
+.driver-standings-container {
+  margin: 2.3rem;
+}
+
 /* Podium styling */
 .podium-container {
   display: flex;

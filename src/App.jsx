@@ -7,8 +7,8 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <DriverStandings />
       <PodiumCards />
+      <DriverStandings />
     </QueryClientProvider>
   )
 }
