@@ -31,7 +31,7 @@
 }
 
 .podium-driver-card {
-  width: 19rem;
+  width: 22.75rem;
   padding: 1.5rem;
   margin: 1rem;
   text-align: center;
@@ -45,4 +45,8 @@
 .podium-driver-card table.podium-card-stats {
   align-self: center;
   margin-inline: auto;
+}
+
+.podium-driver-card .podium-driver-img {
+  max-width: 100%;
 }
