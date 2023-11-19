@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react'
 
 // Passed in position of driver which should be displayed
 // Then we get data based on latest round - could this be changed in future so that year can be specified
@@ -11,7 +12,9 @@ import React from 'react';
 // Poles
 // Points
 
-function PodiumDriverCard() {
+function PodiumDriverCard({ position }) {
+    const [driverStats, setDriverStats] = useState([]);
+
     return (
         <div className='podium-driver-card'>
             {/*
