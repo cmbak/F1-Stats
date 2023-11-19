@@ -20,3 +20,28 @@
     background-color: #f9f9f9;
   }
 } */
+
+/* Podium styling */
+.podium-container {
+  display: flex;
+  justify-content: center;
+
+  /* Change afterwards - used to make visualisation easier */
+  background-color: rgb(211, 211, 211);
+}
+
+.podium-driver-card {
+  padding: 1.5rem;
+  margin: 1rem;
+  text-align: center;
+
+  /* Change afterwards - used to make visualisation easier */
+  background-color: rgb(242, 242, 242);
+  border: 2px solid black;
+  margin-right: 1rem;
+}
+
+.podium-driver-card table.podium-card-stats {
+  align-self: center;
+  margin-inline: auto;
+}
