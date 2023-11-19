@@ -12,16 +12,18 @@ function PodiumDriverCard() {
             <h2>Picture</h2>
             <em>Mercedes AMG Petronas Formula One Team</em>
             <table>
-                <tr>
-                    <th>Wins</th>
-                    <th>Podiums</th>
-                    <th>Poles</th>
-                </tr>
-                <tr>
-                    <th>0</th>
-                    <th>6</th>
-                    <th>1</th>
-                </tr>
+                <tbody>
+                    <tr>
+                        <th>Wins</th>
+                        <th>Podiums</th>
+                        <th>Poles</th>
+                    </tr>
+                    <tr>
+                        <th>0</th>
+                        <th>6</th>
+                        <th>1</th>
+                    </tr>
+                </tbody>
             </table>
         </div>
     )
