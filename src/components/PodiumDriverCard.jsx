@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react'
-import { useQuery, QueryClient, QueryClientProvider } from 'react-query';
+import { useQuery } from 'react-query';
 import axios from 'axios';
 
 // Passed in position of driver which should be displayed
@@ -15,12 +15,11 @@ import axios from 'axios';
 // Points
 
 function PodiumDriverCard({ position, year }) {
-    // const [driverStats, setDriverStats] = useState([]);
+    //const [driverData, setDriverData] = useState({});
     async function retrieveDriverData() {
         const response = await axios.get(`https://ergast.com/api/f1/${year}/driverStandings.json`);
         return response.data;
     }
-
 
     const { isLoading, isError, data, error} = useQuery('driverData', retrieveDriverData);
 
@@ -32,7 +31,9 @@ function PodiumDriverCard({ position, year }) {
         return <span>Error: {error.message}</span>
     }
 
-    //console.log(data);
+    const DRIVER_DATA = (data.MRData.StandingsTable.StandingsLists[0].DriverStandings[position-1]) // OR! Can search through DriverStandings and get object w/ position=position? Which would make more sense?
+    const { Driver: { familyName, givenName, permanentNumber }, points, wins } = DRIVER_DATA;
+    
     return (
         <div className='podium-driver-card'>
             {/*
@@ -40,23 +41,19 @@ function PodiumDriverCard({ position, year }) {
                 If champion already, set name etc. of driver to gold? - How can this be calculated?
              */}
             <div className='podium-card-driver-info'>
-                <h1>Lewis Hamilton</h1>
-                <em>#44</em>
+                <h1>{`${givenName} ${familyName}`}</h1>
+                <em>#{permanentNumber}</em>
                 <h2>Picture</h2>
-                <em>Mercedes AMG Petronas Formula One Team</em>
-                <p>Points: 232</p>
+                <em>{DRIVER_DATA.Constructors[0].name}</em>
+                <p>Points: {points}</p>
             </div>
             <table className='podium-card-stats'>
                 <tbody>
                     <tr>
                         <th>Wins</th>
-                        <th>Podiums</th>
-                        <th>Poles</th>
                     </tr>
                     <tr>
-                        <th>0</th>
-                        <th>6</th>
-                        <th>1</th>
+                        <th>{wins}</th>
                     </tr>
                 </tbody>
             </table>
