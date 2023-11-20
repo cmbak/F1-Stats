@@ -9,9 +9,9 @@ const YEAR = 2023;
 function PodiumCards() {
     return (
         <div className='podium-container'>
-            <PodiumDriverCard position={2} year={YEAR} />
-            <PodiumDriverCard position={1} year={YEAR}/>
-            <PodiumDriverCard position={3} year={YEAR}/>
+            <PodiumDriverCard key={2} position={2} year={YEAR} id={2}/>
+            <PodiumDriverCard key={1} position={1} year={YEAR} id={1}/>
+            <PodiumDriverCard key={3} position={3} year={YEAR} id={3}/>
         </div>
     )
 }
