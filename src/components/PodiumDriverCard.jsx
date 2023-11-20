@@ -2,7 +2,6 @@ import React from 'react';
 import { useQueries, useQuery } from 'react-query';
 import axios from 'axios';
 
-// driver number (if applicable!)
 // Podiums
 // Poles
 
@@ -45,13 +44,13 @@ function PodiumDriverCard({ position, year }) {
     const DRIVER_DATA = (driverData.MRData.StandingsTable.StandingsLists[0].DriverStandings[position-1]) // OR! Can search through DriverStandings and get object w/ position=position? Which would make more sense?
     const { Driver: { familyName, givenName, permanentNumber, url }, points, wins } = DRIVER_DATA;
 
-    // if (isWikiPageLoading) {
-    //     return <span>Loading...</span>
-    // }
+    if (isWikiPageLoading) {
+        return <span>Loading...</span>
+    }
 
-    // if (isWikiPageError) {
-    //     return <span>Error: {wikiPageError.message}</span>
-    // }
+    if (isWikiPageError) {
+        return <span>Error: {wikiPageError.message}</span>
+    }
 
     // TODO - Change width of img
     // TODO - Match img sizes from ^
@@ -65,8 +64,10 @@ function PodiumDriverCard({ position, year }) {
              */}
             <div className='podium-card-driver-info'>
                 <h1>{`${givenName} ${familyName}`}</h1>
-                <em>#{permanentNumber}</em>
-                <img className='podium-driver-img' src={driverImgUrl} alt={`Picture of ${givenName} ${familyName}`} />
+                {permanentNumber && <em>#{permanentNumber}</em>}
+                <div className='img-cont'>
+                    <img className='podium-driver-img' src={driverImgUrl} alt={`Picture of ${givenName} ${familyName}`} />
+                </div>
                 <h2>{DRIVER_DATA.Constructors[0].name}</h2>
                 <p>Points: {points}</p>
             </div>
